@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./icon.png" />
+    <title>FontAwesome Icon Downloader</title>
+    <link rel="stylesheet" href="./css/fontawesome.css" />
+    <link rel="stylesheet" href="./css/light.css" />
+    <link rel="stylesheet" href="./css/thin.css" />
+    <link rel="stylesheet" href="./css/regular.css" />
+    <link rel="stylesheet" href="./css/solid.css" />
+    <link rel="stylesheet" href="./css/duotone.css" />
+    <link rel="stylesheet" href="./css/duotone-thin.css" />
+    <link rel="stylesheet" href="./css/duotone-light.css" />
+    <link rel="stylesheet" href="./css/duotone-regular.css" />
+
+    <link rel="stylesheet" href="./css/sharp-light.css" />
+    <link rel="stylesheet" href="./css/sharp-thin.css" />
+    <link rel="stylesheet" href="./css/sharp-regular.css" />
+    <link rel="stylesheet" href="./css/sharp-solid.css" />
+    <link rel="stylesheet" href="./css/sharp-duotone-light.css" />
+    <link rel="stylesheet" href="./css/sharp-duotone-thin.css" />
+    <link rel="stylesheet" href="./css/sharp-duotone-regular.css" />
+    <link rel="stylesheet" href="./css/sharp-duotone-solid.css" />
+
+    <link rel="stylesheet" href="./css/jelly-regular.css" />
+    <link rel="stylesheet" href="./css/jelly-duo-regular.css" />
+    <link rel="stylesheet" href="./css/jelly-fill-regular.css" />
+    <link rel="stylesheet" href="./css/slab-regular.css" />
+    <link rel="stylesheet" href="./css/slab-duo-regular.css" />
+    <link rel="stylesheet" href="./css/slab-press-regular.css" />
+    <link rel="stylesheet" href="./css/slab-press-duo-regular.css" />
+
+    <link rel="stylesheet" href="./css/graphite-thin.css" />
+    <link rel="stylesheet" href="./css/chisel-regular.css" />
+    <link rel="stylesheet" href="./css/etch-solid.css" />
+    <link rel="stylesheet" href="./css/mosaic-solid.css" />
+    <link rel="stylesheet" href="./css/pixel-regular.css" />
+    <link rel="stylesheet" href="./css/thumbprint-light.css" />
+    <link rel="stylesheet" href="./css/vellum-solid.css" />
+    <link rel="stylesheet" href="./css/whiteboard-semibold.css" />
+
+    <link rel="stylesheet" href="./css/notdog-solid.css" />
+    <link rel="stylesheet" href="./css/notdog-duo-solid.css" />
+    <link rel="stylesheet" href="./css/utility-semibold.css" />
+    <link rel="stylesheet" href="./css/utility-duo-semibold.css" />
+    <link rel="stylesheet" href="./css/utility-fill-semibold.css" />
+
+    <link rel="stylesheet" href="./css/brands.css" />
+    <style>
+      span {
+        font-size: 28px;
+        font-weight: 600;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #222222;
+      }
+
+      input[type="text"] {
+        padding: 12px 16px;
+        font-size: 16px;
+        color: #222222;
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        outline: none;
+      }
+
+      input[type="text"]:focus {
+        border-color: #8d56eb;
+      }
+
+      input[type="color"] {
+        width: 48px;
+        height: 48px;
+        padding: 4px;
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      button {
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: #8d56eb;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #704b80;
+      }
+
+      select {
+        padding: 12px 40px 12px 16px;
+        font-size: 16px;
+        color: #222222;
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      select:focus {
+        border-color: #8deb;
+      }
+
+      .container {
+        width: 128px;
+        height: 128px;
+        padding: 16px;
+        object-fit: contain;
+        background-color: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+      }
+      i:hover {
+        transform: scale(1.05);
+        transition: all;
+        cursor: pointer;
+      }
+    </style>
+    <script src="https://unpkg.com/html-to-image@1.11.13/dist/html-to-image.js"></script>
+    <script>
+      async function downloadAllIcon() {
+        const size = parseInt(document.getElementById("imageSize").value);
+        const icons = document.querySelectorAll("i");
+
+        // Make sure fonts are loaded
+        await document.fonts.ready;
+
+        // Capture each icon's data FIRST
+        const iconData = Array.from(icons).map((icon) => {
+          const before = getComputedStyle(icon, "::before");
+
+          return {
+            content: before.content.replace(/['"]/g, "").replace("/", ""),
+            fontFamily: before.fontFamily || getComputedStyle(icon).fontFamily,
+            fontWeight: before.fontWeight || getComputedStyle(icon).fontWeight,
+            fontStyle: before.fontStyle || getComputedStyle(icon).fontStyle,
+            color: icon.style.color,
+          };
+        });
+
+        // Now generate each icon
+        iconData.forEach((data, index) => {
+          setTimeout(() => {
+            const canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.font = `${data.fontStyle} ${data.fontWeight} ${size * 0.8}px ${data.fontFamily}`;
+            ctx.fillStyle = data.color;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            ctx.fillText(data.content, size * 0.7, size / 2);
+
+            const a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = `icon-${index + 1}-${size}.png`;
+
+            a.click();
+          }, index * 500);
+        });
+      }
+
+      async function downloadIcon(icon) {
+        const size = parseInt(document.getElementById("imageSize").value, 10);
+        await document.fonts.ready;
+
+        // ADDED: clone so the visible icon is not resized
+        const clone = icon.cloneNode(true);
+        const wrapper = document.createElement("div");
+
+        Object.assign(wrapper.style, {
+          position: "fixed",
+          left: "0",
+          top: "0",
+          zindex: "-9999",
+          width: `${size}px`,
+          height: `${size}px`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "transparent",
+        });
+
+        // ADDED: preserve the icon’s classes and associated font file
+        Object.assign(clone.style, {
+          position: "relative",
+          display: "inline-block",
+          fontSize: `${size * 0.8}px`,
+          lineHeight: "1",
+        });
+
+        wrapper.appendChild(clone);
+        document.body.appendChild(wrapper);
+
+        try {
+          // ADDED: captures ::before and ::after as rendered
+          const png = await htmlToImage.toPng(wrapper, {
+            width: size,
+            height: size,
+            pixelRatio: 1,
+            backgroundColor: "transparent",
+            cacheBust: true,
+          });
+
+          const a = document.createElement("a");
+          a.href = png;
+          a.download = `icon-${size}.png`;
+          a.click();
+        } finally {
+          wrapper.remove();
+        }
+      }
+
+      // function downloadIcon(icon) {
+      //   const iconColor = icon.style.color;
+      //   const size = parseInt(document.getElementById("imageSize").value);
+
+      //   const before = getComputedStyle(icon, "::before");
+      //   const content = before.content.replace(/['"]/g, "").replace("/", "");
+      //   const fontFamily =
+      //     before.fontFamily || getComputedStyle(icon).fontFamily;
+      //   const fontWeight =
+      //     before.fontWeight || getComputedStyle(icon).fontWeight;
+      //   const fontStyle = before.fontStyle || getComputedStyle(icon).fontStyle;
+
+      //   const canvas = document.createElement("canvas");
+      //   canvas.width = size;
+      //   canvas.height = size;
+
+      //   const ctx = canvas.getContext("2d");
+      //   const style = getComputedStyle(icon);
+
+      //   ctx.font = `${fontStyle} ${fontWeight} ${size * 0.8}px ${fontFamily}`;
+      //   ctx.fillStyle = iconColor;
+      //   ctx.textAlign = "center";
+      //   ctx.textBaseline = "middle";
+
+      //   ctx.fillText(content, size * 0.7, size / 2);
+
+      //   const a = document.createElement("a");
+      //   a.href = canvas.toDataURL("image/png");
+      //   a.download = `icon-${size}.png`;
+      //   a.click();
+      // }
+
+      let prevoiusIconClass = null;
+      function changeIcon() {
+        const color = document.getElementById("iconColor").value;
+        const iconStyle = document.getElementById("iconstyle").value;
+        const iconName = `fa-${iconStyle}`;
+        const icons = document.querySelectorAll("i");
+        icons.forEach((icon) => {
+          if (prevoiusIconClass) {
+            icon.classList.remove(prevoiusIconClass);
+            icon.style.color = color;
+          }
+          icon.classList.add(iconName);
+        });
+        prevoiusIconClass = iconName;
+      }
+    </script>
+  </head>
+  <body>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; gap: 20px">
+        <div style="display: flex; gap: 10px; align-items: center">
+          <span>Enter Icon Style:</span>
+          <input
+            type="text"
+            id="iconstyle"
+            placeholder="Eg. wave, car"
+            oninput="changeIcon()"
+          />
+          <input type="color" id="iconColor" oninput="changeIcon()" />
+          <!-- <button onclick="changeIcon()">Change</button> -->
+        </div>
+        <hr style="margin: 0" />
+        <div style="display: flex; gap: 10px">
+          <select id="imageSize">
+            <option value="24">24px</option>
+            <option value="48">48px</option>
+            <option value="96" selected>96px</option>
+            <option value="512">512px</option>
+            <option value="1080">1080px</option>
+          </select>
+          <button onclick="downloadAllIcon()">Download All</button>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          font-size: 100px;
+        "
+      >
+        <!-- Mix Single -->
+        <div style="display: flex; gap: 10px; font-size: 100px">
+          <!-- Graphite -->
+          <div class="container" title="graphite-light">
+            <i
+              class="fa-graphite fa-light"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Chisel -->
+          <div class="container" title="chisel-regular">
+            <i
+              class="fa-chisel fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Etch -->
+          <div class="container" title="etch-solid">
+            <i
+              class="fa-etch fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Mosaic -->
+          <div class="container" title="mosaic-solid">
+            <i
+              class="fa-mosaic fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Pixel -->
+          <div class="container" title="pixel-regular">
+            <i
+              class="fa-pixel fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Tumbprint -->
+          <div class="container" title="thumbprint-light">
+            <i
+              class="fa-thumbprint fa-light"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Vellum -->
+          <div class="container" title="vellum-solid">
+            <i
+              class="fa-vellum fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Tumbprint -->
+          <div class="container" title="whiteboard-semibold">
+            <i
+              class="fa-whiteboard fa-semibold"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Basic & Duotone-->
+        <div style="display: flex; gap: 10px; font-size: 100px">
+          <div class="container" title="thin">
+            <i class="fa-thin" id="icon" onclick="downloadIcon(this)"></i>
+          </div>
+          <div class="container" title="light">
+            <i class="fa-light" id="icon" onclick="downloadIcon(this)"></i>
+          </div>
+          <div class="container" title="regular">
+            <i class="fa-regular" id="icon" onclick="downloadIcon(this)"></i>
+          </div>
+          <div class="container" title="solid">
+            <i class="fa-solid" id="icon" onclick="downloadIcon(this)"></i>
+          </div>
+          <!-- </div> -->
+
+          <!-- Duotone -->
+          <!-- <div style="display: flex; gap: 10px; font-size: 100px"> -->
+          <div class="container" title="duotone-thin">
+            <i
+              class="fa-duotone fa-thin"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="duotone-light">
+            <i
+              class="fa-duotone fa-light"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="duotone-regular">
+            <i
+              class="fa-duotone fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="duotone">
+            <i class="fa-duotone" id="icon" onclick="downloadIcon(this)"></i>
+          </div>
+        </div>
+
+        <!-- Sharp -->
+        <div style="display: flex; gap: 10px; font-size: 100px">
+          <div class="container" title="sharp-thin">
+            <i
+              class="fa-sharp fa-thin"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-light">
+            <i
+              class="fa-sharp fa-light"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-regular">
+            <i
+              class="fa-sharp fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-solid">
+            <i
+              class="fa-sharp fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-duotone-thin">
+            <i
+              class="fa-sharp-duotone fa-thin"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-duotone-light">
+            <i
+              class="fa-sharp-duotone fa-light"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-duotone-regular">
+            <i
+              class="fa-sharp-duotone fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="sharp-duotone-solid">
+            <i
+              class="fa-sharp-duotone fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Jelly & Slab -->
+        <div style="display: flex; gap: 10px; font-size: 100px">
+          <!-- Jelly -->
+          <div class="container" title="jelly-regular">
+            <i
+              class="fa-jelly fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="jelly-duo-regular">
+            <i
+              class="fa-jelly-duo fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="jelly-fill-regular">
+            <i
+              class="fa-jelly-fill fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Slab -->
+          <div class="container" title="slab-regular">
+            <i
+              class="fa-slab fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="slab-duo-regular">
+            <i
+              class="fa-slab-duo fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="slab-press-regular">
+            <i
+              class="fa-slab-press fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="slab-press-duo-regular">
+            <i
+              class="fa-slab-press-duo fa-regular"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+        </div>
+
+        <!-- Notdog, Utility & Brands -->
+        <div style="display: flex; gap: 10px; font-size: 100px">
+          <!-- Notdog -->
+          <div class="container" title="notdog-solid">
+            <i
+              class="fa-notdog fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="notdog-duo-solid">
+            <i
+              class="fa-notdog-duo fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Utility -->
+          <div class="container" title="utility-semibild">
+            <i
+              class="fa-utility fa-semibold fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="utility-duo-semibild">
+            <i
+              class="fa-utility-duo fa-semibold fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+          <div class="container" title="utility-fill-semibild">
+            <i
+              class="fa-utility-fill fa-semibold fa-solid"
+              id="icon"
+              onclick="downloadIcon(this)"
+            ></i>
+          </div>
+
+          <!-- Blank -->
+          <div class="container" title="blank"></div>
+
+          <!-- Brands -->
+          <div class="container" title="brands">
+            <i class="fa-brands" id="icon" onclick="downloadIcon(this)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
